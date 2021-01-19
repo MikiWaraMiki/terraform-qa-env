@@ -1,0 +1,13 @@
+remote_state {
+  backend = "s3"
+  config = {
+    // your s3 bucket
+    bucket = "your s3 bucket"
+    // your s3 bucket prefix
+    key = "hoge/fuga"
+    // if you do not use tokyo, you must change
+    region = "ap-northeast-1"
+    // your profile
+    profile = "hogehoge"
+  }
+}

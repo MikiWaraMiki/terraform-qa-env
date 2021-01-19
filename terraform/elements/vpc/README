@@ -1,0 +1,25 @@
+# elements/vpc
+
+- vpcを構築する最小限のモジュールです
+- https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc
+
+# 作成するリソース
+
+- vpc
+    - `vpc-${pj_prefix}`の名前で作成される
+
+# パラメータ(variable)
+- cidr_block
+    - vpcで利用するcidr_block
+- enable_dns_support
+    - VPC内のリソースをDNS名で名前解決できるようにするか
+- enable_dns_hostname
+    - VPC内のリソースにプライベートDNS名を付与するか
+- pj_prefix
+    - Projectを識別するするタグ
+
+# output
+- arn
+    - vpcのarn
+- id
+    - vpcのid

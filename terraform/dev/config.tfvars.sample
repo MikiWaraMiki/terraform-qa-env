@@ -1,0 +1,4 @@
+// リソースを配置するリージョンを指定する
+region = "input use region"
+// aws cliで利用しているprofileを選択する
+profile = "your profile"
