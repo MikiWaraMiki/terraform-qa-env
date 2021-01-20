@@ -6,10 +6,10 @@ variable "profile" {
   default = ""
 }
 
-# Network周りのパラメータ
 variable "pj_prefix" {
   default = "sample-qa-create"
 }
+# Network周りのパラメータ
 variable "vpc_cidr_block" {
   default = "172.17.0.0/16"
 }

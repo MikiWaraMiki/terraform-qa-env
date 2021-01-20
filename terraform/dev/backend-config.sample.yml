@@ -1,0 +1,5 @@
+bucket: "tfstateを保管するバケット"
+region: ap-northeast-1
+encrypt: true
+profile: "awscliを利用するprofile"
+key_base: "s3のprefix"
