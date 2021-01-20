@@ -33,5 +33,4 @@ override.tf.json
 
 # tfbackend
 *.tfbackend
-*.terraform.lock.hcl
 **/*/backend-config.yml
