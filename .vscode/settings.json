@@ -1,0 +1,39 @@
+{
+  "eslint.workingDirectories": ["lambda/create-ecs-infra/create-ecs-infra"],
+  "editor.tabSize": 2,
+  "eslint.validate": ["javascript", "typescript"],
+  "eslint.packageManager": "yarn",
+  "editor.formatOnSave": true,
+  "editor.formatOnType": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true,
+    "source.fixAll.styleling": true
+  },
+  "files.trimTrailingWhitespace": true,
+  "files.trimFinalNewlines": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[graphql]": {
+    "editor.formatOnSave": true
+  },
+  "[javascript]": {
+    "editor.formatOnSave": true
+  },
+  "[javascriptreact]": {
+    "editor.formatOnSave": true
+  },
+  "[json]": {
+    "editor.formatOnSave": true
+  },
+  "[typescript]": {
+    "editor.formatOnSave": true
+  },
+  "css.validate": false,
+  "less.validate": false,
+  "scss.validate": false,
+  "cSpell.userWords": [],
+  "cSpell.enabled": true,
+  "vetur.grammar.customBlocks": {
+    "docs": "md",
+    "i18n": "json"
+  }
+}
