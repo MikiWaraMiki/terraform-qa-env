@@ -1,5 +1,5 @@
 import { AlbApiInterFace } from '@/domain/model/aws/alb/AlbApiInterface'
-import { useAblePortList } from '@/domain/model/aws/alb/UseAbleAlbPort'
+import { UseAbleAlbPort } from '@/domain/model/aws/alb/UseAbleAlbPort'
 import { createLambdaLogger } from '@/util/logger'
 
 const getAlbEmptyPort = async (
@@ -7,14 +7,17 @@ const getAlbEmptyPort = async (
   albName: string,
 ): Promise<number> => {
   const logger = createLambdaLogger()
+
   const albArn = await albApi.getAlbArn(albName)
   if (!albArn) {
+    const errorMessage = `[GetAlbEmptyPort][getAlbEmptyPort] cannot find alb. check alb arn. alb_arn: ${albArn}`
     logger.log({
       level: 'info',
-      message: '[GetAlbEmptyPort][getAlbEmptyPort]albArn is undefined',
+      message: errorMessage,
     })
-    throw Error('[GetAlbEmptyPort][getAlbEmptyPort]albArn is undefined')
+    throw Error(errorMessage)
   }
+  // ALBが利用しているポート一覧を取得する
   const albUsingPortList = await albApi.getAlbUsingPortList(albArn)
 
   logger.log({
@@ -22,25 +25,18 @@ const getAlbEmptyPort = async (
     message: `using port list: ${albUsingPortList.join(',')}`,
   })
 
-  const useAbleEmptyPortList = useAblePortList.filter((port) => {
-    return !albUsingPortList.includes(port)
-  })
-
-  logger.log({
-    level: 'info',
-    message: `empty port list: ${useAbleEmptyPortList.join(',')}`,
-  })
-  if (useAbleEmptyPortList.length < 1) {
+  const useAblePort = UseAbleAlbPort.useAblePort(albUsingPortList)
+  if (!useAblePort) {
+    const errorMessage =
+      '[GetAlbEmptyPort][getAlbEmptyPort] usable port is limit.'
     logger.log({
       level: 'warn',
-      message: `[GetAlbEmptyPort][getAlbEmptyPort] empty port is not exist... usingPort:${albUsingPortList.join(
-        ',',
-      )}`,
+      message: errorMessage,
     })
-    throw Error('[GetAlbEmptyPort][getAlbEmptyPort] empty port is not exist...')
+    throw Error(errorMessage)
   }
 
-  return useAbleEmptyPortList[0]
+  return useAblePort
 }
 
 export { getAlbEmptyPort }

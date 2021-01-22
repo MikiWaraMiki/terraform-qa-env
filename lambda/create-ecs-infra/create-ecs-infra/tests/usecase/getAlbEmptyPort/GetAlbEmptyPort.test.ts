@@ -1,7 +1,8 @@
-import { useAblePortList } from '@/domain/model/aws/alb/UseAbleAlbPort'
+import { UseAbleAlbPort } from '@/domain/model/aws/alb/UseAbleAlbPort'
 import { getAlbEmptyPort } from '@/usecase/getALbEmptyPort/GetAlbEmptyPort'
 import { AlbApiMock } from './AlbApiMock'
 
+const useAblePortList = UseAbleAlbPort.useAblePortList()
 describe('getAlbEmptyPortのテスト', (): void => {
   test('空きポートが空いている場合は、ポート番号を返すこと', async (): Promise<void> => {
     const expectedResult = useAblePortList.filter((port) => port !== 10080)

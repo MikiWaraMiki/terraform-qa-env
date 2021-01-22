@@ -1,4 +1,5 @@
 import { IngressSecurityGroupRule } from '@/domain/model/aws/securityGroup/IngressSecurityGroupRule'
+import { IpPermission } from '@/domain/model/aws/securityGroup/IpPermission'
 import { SecurityGroupApi } from '@/infra/aws/securityGroup/SecurityGroupApi'
 import * as AWS from 'aws-sdk'
 import * as dotenv from 'dotenv'
@@ -20,24 +21,13 @@ const sgApi = new SecurityGroupApi()
 describe('addIngressRulesのテスト', (): void => {
   test('ルールが正常な場合は追加に成功すること', async (): Promise<void> => {
     try {
-      const rule: IngressSecurityGroupRule = {
-        GroupId: process.env.TEST_SECURITY_GROUP_ID as string,
-        DryRun: true,
-        IpPermissions: [
-          {
-            ToPort: 80,
-            FromPort: 80,
-            IpProtocol: 'tcp',
-            IpRanges: [
-              {
-                CidrIp: process.env.TEST_SOURCE_IP as string,
-                Description: 'test',
-              },
-            ],
-          },
-        ],
-      }
-      const result = await sgApi.addIngressRule(rule)
+      const ipPermission = new IpPermission(80, 80, 'tcp')
+      ipPermission.addIpRule(process.env.TEST_SOURCE_IP as string, 'test')
+      const testRule = new IngressSecurityGroupRule(
+        process.env.TEST_SECURITY_GROUP_ID as string,
+        [ipPermission],
+      )
+      const result = await sgApi.addIngressRule(testRule)
     } catch (e) {
       // DryRunにさせているので、エラーメッセージ検証
       const errorMes = (e as Error).message
@@ -48,24 +38,10 @@ describe('addIngressRulesのテスト', (): void => {
   })
 
   test('ルールに不備があり、追加できなかった場合はfalseを返すこと', async (): Promise<void> => {
-    const rule: IngressSecurityGroupRule = {
-      GroupId: '',
-      DryRun: true,
-      IpPermissions: [
-        {
-          ToPort: 80,
-          FromPort: 80,
-          IpProtocol: 'tcp',
-          IpRanges: [
-            {
-              CidrIp: process.env.TEST_SOURCE_IP as string,
-              Description: 'test',
-            },
-          ],
-        },
-      ],
-    }
-    const result = await sgApi.addIngressRule(rule)
+    const ipPermission = new IpPermission(80, 80, 'tcp')
+    ipPermission.addIpRule(process.env.TEST_SOURCE_IP as string, 'test')
+    const testRule = new IngressSecurityGroupRule('', [ipPermission])
+    const result = await sgApi.addIngressRule(testRule)
     expect(result).toBeFalsy()
   })
 })

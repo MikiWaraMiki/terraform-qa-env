@@ -1,12 +1,10 @@
-import { EC2 } from 'aws-sdk'
 import { IngressSecurityGroupRule } from '@/domain/model/aws/securityGroup/IngressSecurityGroupRule'
 import { SecurityGroupApiInterface } from '@/domain/model/aws/securityGroup/SecurityGroupApiInterface'
 import { createLambdaLogger } from '@/util/logger'
-import { AuthorizeSecurityGroupIngressRequest } from 'aws-sdk/clients/ec2'
-import { AuthorizeDBSecurityGroupIngressResult } from 'aws-sdk/clients/rds'
+import { SecurityGroupCoreApi } from '@/infra/aws/securityGroup/SecurityGroupCoreApi'
 
 export class SecurityGroupApi implements SecurityGroupApiInterface {
-  private readonly ec2 = new EC2()
+  private readonly sgApi = new SecurityGroupCoreApi()
   private readonly logger = createLambdaLogger()
 
   /**
@@ -15,8 +13,7 @@ export class SecurityGroupApi implements SecurityGroupApiInterface {
    */
   async addIngressRule(rule: IngressSecurityGroupRule): Promise<boolean> {
     try {
-      this.loggingSecurityGroup(rule)
-      await this.ec2.authorizeSecurityGroupIngress(rule).promise()
+      await this.sgApi.addIngressRule(rule)
       return true
     } catch (e) {
       e as Error
@@ -37,7 +34,7 @@ export class SecurityGroupApi implements SecurityGroupApiInterface {
       level: 'info',
       message: `${prefix} add security group`,
     })
-    const jsonStrRule = JSON.stringify(rule)
+    const jsonStrRule = JSON.stringify(rule.awsApiRequestParams)
     this.logger.log({
       level: 'info',
       message: `${prefix} ${jsonStrRule}`,
